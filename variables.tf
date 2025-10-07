@@ -1,55 +1,42 @@
-variable "project_id" {
-  description = "The ID of the project"
-  default     = "jason-hsbc" 
+variable "name" {
+  description = "The name of the managed instance group."
   type        = string
 }
 
-variable "region_id" {
-  description = "The region of the project"
-  default     = "europe-west2" 
-  type        = string
-}
-
-variable "zone_id" {
-  description = "The zone id of the project"
-  default     = "europe-west2-c" 
-  type        = string
-}
-
-//https://cloud.google.com/iam/docs/service-agents
-variable "gcs_sa" {
-  description = "built-in service acount of GCS"
-  default     = "service-912156613264@gs-project-accounts.iam.gserviceaccount.com" 
-  type        = string
-}
-
-//https://cloud.google.com/iam/docs/service-agents
-variable "sts_sa" {
-  description = "built-in service acount of Storage Transer service"
-  default     = "project-912156613264@storage-transfer-service.iam.gserviceaccount.com" 
-  type        = string
-}
-
-variable "vpc0" {
-  description = "The name of the VPC network"
-  default     = "tf-vpc0"
+variable "zone" {
+  description = "The zone where the managed instance group will be created."
   type        = string
 }
 
 variable "machine_type" {
-  description = "The machine type for the VM instance"
-  default     = "e2-medium"
+  description = "The machine type for the instances."
   type        = string
+  default     = "e2-small"
 }
 
 variable "source_image" {
-  description = "The source image for the VM instance"
-  default     = "debian-cloud/debian-11"
+  description = "The source image for the instances' boot disks."
   type        = string
 }
 
-variable "vm_common_sa" {
-  description = "The email of the vm-common service account"
-  default     = "vm-common@jason-hsbc.iam.gserviceaccount.com"
+variable "subnetwork" {
+  description = "The subnetwork to which the instances will be attached."
   type        = string
+}
+
+variable "service_account_email" {
+  description = "The email of the service account to be used by the instances."
+  type        = string
+}
+
+variable "target_size" {
+  description = "The number of instances in the managed instance group."
+  type        = number
+  default     = 1
+}
+
+variable "startup_script" {
+  description = "The startup script to be executed on instance boot."
+  type        = string
+  default     = ""
 }
