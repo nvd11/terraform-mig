@@ -36,6 +36,8 @@ module "my_mig" {
 
 ## Outputs
 
+Outputs are the return values of a Terraform module. You can use them to expose information about the resources created by the module to other parts of your Terraform configuration. For example, you could use the `instance_group_manager_id` to attach a load balancer.
+
 | Name                        | Description                                    |
 | --------------------------- | ---------------------------------------------- |
 | `instance_group_manager_name` | The name of the managed instance group manager. |
