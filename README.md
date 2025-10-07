@@ -8,7 +8,7 @@ You can use this module by adding a module block to your Terraform configuration
 
 ```hcl
 module "my_mig" {
-  source                = "git@github.com:nvd11/terraform-mig.git"
+  source                = "git@github.com:nvd11/terraform-mig.git?ref=0.0.1"
   
   name                  = "my-instance-group"
   zone                  = "us-central1-a"
