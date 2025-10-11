@@ -23,7 +23,6 @@ resource "google_compute_instance_template" "mig_template" {
     provisioning_model  = var.spot ? "SPOT" : "STANDARD"
     on_host_maintenance = var.spot ? "TERMINATE" : "MIGRATE"
     automatic_restart   = !var.spot
-    preemptible         = var.spot
   }
 
   metadata_startup_script = var.startup_script
@@ -38,5 +37,9 @@ resource "google_compute_instance_group_manager" "mig" {
   version {
     name              = "v1"
     instance_template = google_compute_instance_template.mig_template.id
+  }
+
+  update_policy {
+    type = "PROACTIVE"
   }
 }
