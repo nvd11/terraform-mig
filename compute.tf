@@ -19,6 +19,12 @@ resource "google_compute_instance_template" "mig_template" {
     scopes = ["cloud-platform"]
   }
 
+  scheduling {
+    provisioning_model  = var.spot ? "SPOT" : "STANDARD"
+    on_host_maintenance = var.spot ? "TERMINATE" : "MIGRATE"
+    automatic_restart   = !var.spot
+  }
+
   metadata_startup_script = var.startup_script
 }
 

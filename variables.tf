@@ -40,3 +40,9 @@ variable "startup_script" {
   type        = string
   default     = ""
 }
+
+variable "spot" {
+  description = "If true, creates Spot VMs. This also sets on_host_maintenance to TERMINATE."
+  type        = bool
+  default     = true
+}
