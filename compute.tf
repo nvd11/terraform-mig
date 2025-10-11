@@ -40,6 +40,9 @@ resource "google_compute_instance_group_manager" "mig" {
   }
 
   update_policy {
-    type = "PROACTIVE"
+    # The type of update process. PROACTIVE applies the new configuration to all instances.
+    type            = "PROACTIVE"
+    # The minimal action to take on instances. REPLACE deletes and recreates instances.
+    minimal_action  = "REPLACE"
   }
 }
