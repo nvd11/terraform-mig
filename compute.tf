@@ -46,5 +46,6 @@ resource "google_compute_instance_group_manager" "mig" {
     type            = "PROACTIVE"
     # The minimal action to take on instances. REPLACE deletes and recreates instances.
     minimal_action  = "REPLACE"
+    max_unavailable_fixed = 1
   }
 }
