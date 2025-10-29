@@ -25,6 +25,9 @@ resource "google_compute_instance_template" "mig_template" {
     automatic_restart   = !var.spot
     # preemptible must be true when provisioning_model is SPOT.
     preemptible         = var.spot
+    # The default action is STOP, which is what the API returns for SPOT VMs.
+    # Explicitly setting it here prevents a perpetual diff.
+    instance_termination_action = "STOP"
   }
 
   metadata_startup_script = var.startup_script
