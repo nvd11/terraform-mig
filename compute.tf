@@ -1,5 +1,5 @@
-resource "google_compute_instance_template" "my-mig-template" {
-  name         = "instance-template-example-v3"
+resource "google_compute_instance_template" "mig_template" {
+  name_prefix  = "${var.name}-"
   machine_type = var.machine_type
 
   lifecycle {
@@ -12,24 +12,43 @@ resource "google_compute_instance_template" "my-mig-template" {
     boot         = true
   }
   network_interface {
-    subnetwork = "tf-vpc0-subnet0"
+    subnetwork = var.subnetwork
   }
   service_account {
-    email  = var.vm_common_sa
+    email  = var.service_account_email
     scopes = ["cloud-platform"]
   }
 
-  metadata_startup_script = "echo 'Instance started at $(date)' >> /var/log/startup.log"
+  scheduling {
+    provisioning_model  = var.spot ? "SPOT" : "STANDARD"
+    on_host_maintenance = var.spot ? "TERMINATE" : "MIGRATE"
+    automatic_restart   = !var.spot
+    # preemptible must be true when provisioning_model is SPOT.
+    preemptible         = var.spot
+    # The default action is STOP, which is what the API returns for SPOT VMs.
+    # Explicitly setting it here prevents a perpetual diff.
+    instance_termination_action = "STOP"
+  }
+
+  metadata_startup_script = var.startup_script
 }
 
-resource "google_compute_instance_group_manager" "my-mig1" {
-  name               = "instance-group-example"
-  base_instance_name = "vm-example"
-  zone               = var.zone_id
-  target_size        = 1
+resource "google_compute_instance_group_manager" "mig" {
+  name               = var.name
+  base_instance_name = "${var.name}-vm"
+  zone               = var.zone
+  target_size        = var.target_size
 
   version {
     name              = "v1"
-    instance_template = google_compute_instance_template.my-mig-template.id
+    instance_template = google_compute_instance_template.mig_template.id
+  }
+
+  update_policy {
+    # The type of update process. PROACTIVE applies the new configuration to all instances.
+    type            = "PROACTIVE"
+    # The minimal action to take on instances. REPLACE deletes and recreates instances.
+    minimal_action  = "REPLACE"
+    max_unavailable_fixed = 1
   }
 }
